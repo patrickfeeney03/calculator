@@ -32,48 +32,63 @@ class Calculator {
     }
   }
 
+  setDisplay(text) {
+    let displayElement = document.querySelector("#result-box");
+    displayElement.innerText = text;
+  }
+
   buttonHandler(event) {
+    let result;
     let buttonPressed = event.currentTarget;
     let buttonContent = buttonPressed.innerText;
     
     if (this.number1 == '' && this.operator == '' && this.number2 == '') {
       this.number1 = buttonContent;
+      console.log(`${this.number1}`);
     } else if (this.number1 != '' && this.operator == '' && this.number2 == '') {
       if (isNaN(buttonContent)) {
         this.operator = buttonContent;
+        console.log(`${this.operator}`);
       } else {
         this.number1 = this.number1.toString() + buttonContent.toString();
+        console.log(`${this.number1}`);
       }
     } else if (this.number1 != '' && this.operator != '' && this.number2 == '') {
       if (isNaN(buttonContent)) {
         this.operator = buttonContent;
+        console.log(`${this.operator}`);
       } else {
         this.number2 = buttonContent;
+        console.log(`${this.number2}`);
       }
     } else if (this.number1 != '' && this.operator != '' && this.number2 != '') {
       if (isNaN(buttonContent)) {
-        let result = this.operate(+this.number1, this.operator, +this.number2);
+        result = this.operate(+this.number1, this.operator, +this.number2);
         this.number1 = result;
         this.operator = '';
         this.number2 = '';
-        console.log(result);
         if (buttonContent != '=') {
           this.operator = buttonContent;
+          console.log(`${result}`);
+          console.log(`${this.operator}`);
+        } else {
+          console.log(`${buttonContent}`);
+          console.log(`${result}`);
         }
       } else {
         this.number2 = this.number2.toString() + buttonContent.toString();
+        console.log(this.number2);
       }
     }
-    console.log(buttonContent);
+
+
+
   }
 
   // Function to write to display? setDisplay("abc") clearDisplay appendToDisplay(String)
-  // getDisplayContent
 }
 
 const myCalc = new Calculator;
 
-function print1() {
-  console.log("Asbda");
-}
 
+// Make the Calculator class create it's own HTML calculator.
