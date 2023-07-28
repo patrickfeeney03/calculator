@@ -49,7 +49,7 @@ class Calculator {
     if (buttonContent == "C") { // 'C' button to clear calculator
       this.resetCalculator();
     } else if (this.number2 != '') { // When the second number has already been populated
-      if (isNaN(buttonContent)) { // If it is not a number, calculate
+      if (["+", "-", "*", "/", "="].includes(buttonContent)) { // If it is not a number, calculate
         result = parseFloat(this.operate(+this.number1, this.operator, +this.number2).toFixed(4)) ;
         this.number1 = result;
         this.operator = '';
@@ -68,6 +68,10 @@ class Calculator {
         console.log(result);
         console.log(this.operator);
         this.setDisplay(result);
+      } else if (buttonContent == "⬅") {
+        console.log("here");
+        this.number2 = this.number2.slice(0, -1);
+        this.setDisplay(this.number2);
       }
     } else if (this.operator != '') { // When operator has already been populated
       if (!isNaN(buttonContent) || buttonContent == "-") { // If it is a number, set as number2
