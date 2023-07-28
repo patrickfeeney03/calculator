@@ -49,19 +49,18 @@ class Calculator {
     if (buttonContent == "C") { // 'C' button to clear calculator
       this.resetCalculator();
     } else if (this.number2 != '') { // When the second number has already been populated
-      if (this.operator == "/" && this.number2 == 0) {
+      if (this.operator == "/" && this.number2 == 0) { // Preven't dividing by 0
         result = "Can't divide by 0";
         this.number1 = '';
         this.operator = '';
         this.number2 = '';
       } else if (["+", "-", "*", "/", "="].includes(buttonContent)) { // If it is not a number, calculate
-        result = (this.number2 != 0) ?
-          parseFloat(this.operate(+this.number1, this.operator, +this.number2).toFixed(4)) : "Can't divide by 0";
+        result = parseFloat(this.operate(+this.number1, this.operator, +this.number2).toFixed(4));
         this.number1 = result;
         this.operator = '';
         this.number2 = '';
       }
-      if (!isNaN(buttonContent)) { // If it is a number, append number to current number2
+      if (!isNaN(buttonContent) || (buttonContent == "." && !this.number2.includes("."))) { // If it is a number, append number to current number2
         this.number2 = this.number2.toString() + buttonContent.toString();
         console.log(this.number2);
         this.setDisplay(this.number2);
@@ -69,18 +68,17 @@ class Calculator {
         console.log(buttonContent);
         console.log(result);
         this.setDisplay(result);
-      } else if (["+", "-", "*", "/"].includes(buttonContent)) { // If it is an operator button show result and set operator
+      } else if (["+", "-", "*", "/"].includes(buttonContent) && !isNaN(this.number2)) { // If it is an operator button show result and set operator
         this.operator = buttonContent;
         console.log(result);
         console.log(this.operator);
         this.setDisplay(result);
       } else if (buttonContent == "⬅") {
-        console.log("here");
         this.number2 = this.number2.slice(0, -1);
         this.setDisplay(this.number2);
       }
     } else if (this.operator != '') { // When operator has already been populated
-      if (!isNaN(buttonContent) || buttonContent == "-") { // If it is a number, set as number2
+      if (!isNaN(buttonContent) || (buttonContent == "-" && !this.number2.includes("-")) || (buttonContent == "." && !this.number2.includes("."))) { // If it is a number, set as number2
         this.number2 = buttonContent;
         console.log(this.number2);
         this.setDisplay(this.number2);
@@ -89,15 +87,18 @@ class Calculator {
         console.log(this.operator);
       }
     } else if (this.number1 != '') { // When number1 has already been populated
-      if (!isNaN(buttonContent)) { // If number, append to number1
+      if (!isNaN(buttonContent) || (buttonContent == "." && !this.number1.includes("."))) { // If number, append to number1
         this.number1 = this.number1.toString() + buttonContent.toString();
         console.log(this.number1);
         this.setDisplay(this.number1);
-      } else if (["+", "-", "*", "/"].includes(buttonContent)) { // If operator pressed, the operator gets set
+      } else if (["+", "-", "*", "/"].includes(buttonContent) && !isNaN(this.number1)) { // If operator pressed, the operator gets set
         this.operator = buttonContent;
         console.log(this.operator);
+      } else if (buttonContent == "⬅") {
+        this.number1 = this.number1.slice(0, -1);
+        this.setDisplay(this.number1);
       }
-    } else if (this.number1 == '' && (!isNaN(buttonContent) || buttonContent == "-")) { // When number1 has NOT being set, it gets set if it is a valid number
+    } else if (this.number1 == '' && (!isNaN(buttonContent) || (buttonContent == "-" && !this.number1.includes("-"))) || buttonContent == ".") { // When number1 has NOT being set, it gets set if it is a valid number
       this.number1 = buttonContent;
       console.log(`${this.number1}`);
       this.setDisplay(this.number1);
