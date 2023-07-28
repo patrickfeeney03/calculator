@@ -36,7 +36,7 @@ class Calculator {
   setDisplay(text) {
     this.displaySquare.innerText = text;
   }
-  
+
   appendToDisplay(text) {
     this.displaySquare.innerText += ` ${text}`;
   }
@@ -49,8 +49,14 @@ class Calculator {
     if (buttonContent == "C") { // 'C' button to clear calculator
       this.resetCalculator();
     } else if (this.number2 != '') { // When the second number has already been populated
-      if (["+", "-", "*", "/", "="].includes(buttonContent)) { // If it is not a number, calculate
-        result = parseFloat(this.operate(+this.number1, this.operator, +this.number2).toFixed(4)) ;
+      if (this.operator == "/" && this.number2 == 0) {
+        result = "Can't divide by 0";
+        this.number1 = '';
+        this.operator = '';
+        this.number2 = '';
+      } else if (["+", "-", "*", "/", "="].includes(buttonContent)) { // If it is not a number, calculate
+        result = (this.number2 != 0) ?
+          parseFloat(this.operate(+this.number1, this.operator, +this.number2).toFixed(4)) : "Can't divide by 0";
         this.number1 = result;
         this.operator = '';
         this.number2 = '';
