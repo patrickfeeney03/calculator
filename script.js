@@ -50,7 +50,7 @@ class Calculator {
       this.resetCalculator();
     } else if (this.number2 != '') { // When the second number has already been populated
       if (isNaN(buttonContent)) { // If it is not a number, calculate
-        result = this.operate(+this.number1, this.operator, +this.number2);
+        result = parseFloat(this.operate(+this.number1, this.operator, +this.number2).toFixed(4)) ;
         this.number1 = result;
         this.operator = '';
         this.number2 = '';
