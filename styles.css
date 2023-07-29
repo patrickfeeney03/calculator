@@ -3,3 +3,8 @@
   height: 20px;
   background-color: lightblue;
 }
+
+#main-number-grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
