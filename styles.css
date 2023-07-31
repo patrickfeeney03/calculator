@@ -29,11 +29,11 @@ body {
 
 .result-box {
   height: 7rem;
-  max-width: 430px;
+  padding: 0 0.5rem 0 0.5rem;
   margin: 0.2rem auto 0.6rem auto;
   background-color: #272727;
   color: #cccccc;
-  font-size: 4rem;
+  font-size: 3.9rem;
   display: flex;
   align-items: center;
   overflow: hidden;
