@@ -6,39 +6,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calculator</title>
   <link rel="stylesheet" href="./styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;300;400;500;600;700&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
-  <div id="main-container">
-
-    <div id="main-number-grid-container">
-      <button class="number-buttons main-number-grid">1</button>
-      <button class="number-buttons main-number-grid">2</button>
-      <button class="number-buttons main-number-grid">3</button>
-      <button class="number-buttons main-number-grid">4</button>
-      <button class="number-buttons main-number-grid">5</button>
-      <button class="number-buttons main-number-grid">6</button>
+  <div class="main-container">
+    <p class="calculator-name">Casiox</p>
+    <div class="result-box"></div>
+    <div class="grid-4x4">
+      <button class="clear">C</button>
+      <button>⬅</button>
+      <button>π</button>
+      <button id="division" class="operator-buttons">/</button>
       <button class="number-buttons main-number-grid">7</button>
       <button class="number-buttons main-number-grid">8</button>
       <button class="number-buttons main-number-grid">9</button>
+      <button id="multiplication" class="operator-buttons">*</button>
+      <button class="number-buttons main-number-grid">4</button>
+      <button class="number-buttons main-number-grid">5</button>
+      <button class="number-buttons main-number-grid">6</button>
+      <button id="subtraction" class="operator-buttons">-</button>
+      <button class="number-buttons main-number-grid">1</button>
+      <button class="number-buttons main-number-grid">2</button>
+      <button class="number-buttons main-number-grid">3</button>
+      <button id="addition" class="operator-buttons">+</button>
     </div>
-    <button class="number-buttons">0</button>
-    <button>.</button>
-    <button>π</button>
-    <br>
-    <button id="addition" class="operator-buttons">+</button>
-    <button id="subtraction" class="operator-buttons">-</button>
-    <button id="multiplication" class="operator-buttons">*</button>
-    <button id="division" class="operator-buttons">/</button>
-    <button id="calculate" class="operator-buttons">=</button>
-
-    <button id="clear">C</button>
-    <button>⬅</button>
-    <div id="result-box"></div>
-
-
+    <div class="grid-bottom">
+      <button class="number-buttons button-zero">0</button>
+      <button>.</button>
+      <button class="calculate" class="operator-buttons">=</button>
+    </div>
   </div>
-
 </body>
 <script src="./script.js"></script>
 

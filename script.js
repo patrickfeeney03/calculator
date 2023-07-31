@@ -13,7 +13,7 @@ class Calculator {
 
     let numberButtons = document.querySelectorAll(".number-buttons");
     let operatorButtons = document.querySelectorAll(".operator-buttons");
-    this.displaySquare = document.querySelector("#result-box");
+    this.displaySquare = document.querySelector(".result-box");
 
     let calculatorButtons = document.querySelectorAll("button");
 
@@ -94,8 +94,9 @@ class Calculator {
     } else if (this.number1 != '') { // When number1 has already been populated
       if (!isNaN(buttonContent) || (buttonContent == "." && !this.number1.includes("."))) { // If number, append to number1
         this.number1 = this.number1.toString() + buttonContent.toString();
+        //this.number1 = this.returnNumberCorrectLength(this.number1, 7, 6);
         console.log(this.number1);
-        this.setDisplay(this.number1);
+        this.setDisplay(this.returnNumberCorrectLength(this.number1, 12, 6));
       } else if (["+", "-", "*", "/"].includes(buttonContent) && !isNaN(this.number1)) { // If operator pressed, the operator gets set
         this.operator = buttonContent;
         console.log(this.operator);
@@ -112,6 +113,16 @@ class Calculator {
       console.log(`${this.number1}`);
       this.setDisplay(this.number1);
     }
+  }
+
+  returnNumberCorrectLength(number, maxCharsLength, decimalPlaces) {
+    if (number.length >= maxCharsLength && number.length < 12) {
+      number = Number(number).toExponential(decimalPlaces);
+    }
+    if (number.length >= 12) {
+      number = Number(number).toExponential(decimalPlaces-1);
+    }
+    return number;
   }
 
   resetCalculator() {
