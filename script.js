@@ -112,16 +112,12 @@ class Calculator {
     this.calculatorLogic(buttonContent);
   }
 
-  keyboardHandler(event) {
-
-  }
-
   returnNumberCorrectLength(number, maxCharsLength, decimalPlaces) {
     if (number.toString().length >= maxCharsLength && number.length < 12) {
       number = Number(number).toExponential(decimalPlaces);
     }
     if (number.toString().length >= 12) {
-      number = Number(number).toExponential(decimalPlaces-1);
+      number = Number(number).toExponential(decimalPlaces - 1);
     }
     return number;
   }
@@ -230,16 +226,26 @@ class Calculator {
     mainContainer.appendChild(grid4x4);
     mainContainer.appendChild(gridBottom);
 
-    document.body.appendChild(mainContainer);
+    this.mainContainerContainer = document.createElement("div");
+    this.mainContainerContainer.className = "main-container-container"
+    this.mainContainerContainer.appendChild(mainContainer);
+
+    const calculatorsContainer = document.querySelector("#calculators-container");
+    calculatorsContainer.appendChild(this.mainContainerContainer);
 
     this.calculatorButtons = [clear, back, pi, division, multiplication, subtraction, addition, point, equal, one, two, three, four, five, six, seven, eight, nine, zero];
     this.calculatorButtons.forEach(button => button.addEventListener("click", this.buttonHandler.bind(this)));
-    
+
     this.displaySquare = this.resultBox;
 
     // By default, the newest calculator is the active one.
     Calculator.activeCalculator = this;
-    
+    const allCalcs = document.querySelectorAll(".main-container");
+    allCalcs.forEach(calculator => {
+      calculator.classList.remove("active-main-container");
+    });
+    mainContainer.classList.add("active-main-container");
+
     mainContainer.addEventListener("click", () => {
       Calculator.activeCalculator = this;
       const allCalcs = document.querySelectorAll(".main-container");
@@ -253,19 +259,50 @@ class Calculator {
       event.preventDefault();
       console.log(event.key);
       if (["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "c", "C", "Backspace", "p", "P", "/", "*", "-", "+", "=", "Enter"]
-      .includes(event.key) && this === Calculator.activeCalculator) {
+        .includes(event.key) && this === Calculator.activeCalculator) {
         this.calculatorLogic(event.key);
       }
     });
   }
-
-
 }
 
-const myCalc1 = new Calculator();
-myCalc1.createElements();
-const myCalc2 = new Calculator();
-myCalc2.createElements();
+const addCalcBtn = document.querySelector("#button-addCalc");
+addCalcBtn.addEventListener("click", (event) => {
+  const newCalc = new Calculator();
+  newCalc.createElements();
+  const lengthObject = Object.keys(calculators).length;
+  const indexI = lengthObject > 0 ? +Object.keys(calculators).reduce((a, b) => calculators[a] > calculators[b] ? a : b) + 1 : 0;
+  calculators[indexI] = newCalc;
+  const removeBtn = document.createElement("button");
+  removeBtn.textContent = "Remove";
+  removeBtn.className = "remove-button";
+  //removeBtn.calcKey = Object.keys(calculators).length > 0 ? Object.keys(calculators).length - 1 : 0;
+  removeBtn.calcKey = indexI;
+  removeBtn.addEventListener("click", () => { removeCalculator(removeBtn.calcKey) });
+  newCalc.mainContainerContainer.appendChild(removeBtn);
+});
+
+
+const calculators = {};
+const newCalc = new Calculator();
+newCalc.createElements();
+calculators[Object.keys(calculators).length] = newCalc;
+const removeBtn = document.createElement("button");
+removeBtn.textContent = "Remove";
+removeBtn.className = "remove-button";
+removeBtn.calcKey = Object.keys(calculators).length > 0 ? Object.keys(calculators).length - 1 : 0;
+removeBtn.addEventListener("click", () => { removeCalculator(removeBtn.calcKey) });
+newCalc.mainContainerContainer.appendChild(removeBtn);
+
+function removeCalculator(key) {
+  console.log(`key: ${key}`);
+  console.log(calculators[key]);
+  let calculatorsContainer = document.querySelector("#calculators-container");
+  calculatorsContainer.removeChild(calculators[key].mainContainerContainer);
+  //delete calculators[key];
+  delete calculators[key];
+}
+
 
 // Make the Calculator class create it's own HTML calculator.
 // Be sure to allow the user to add negative numbers for multiplication
