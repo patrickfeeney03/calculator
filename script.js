@@ -1,4 +1,5 @@
 class Calculator {
+  static activeCalculator = null;
   constructor() {
     this.operations = {
       "-": (a, b) => a - b,
@@ -10,6 +11,7 @@ class Calculator {
     this.number1 = '';
     this.operator = '';
     this.number2 = '';
+
   }
 
   operate(num1, op, num2) {
@@ -33,12 +35,9 @@ class Calculator {
     this.displaySquare.innerText += ` ${text}`;
   }
 
-  buttonHandler(event) {
+  calculatorLogic(button) {
     let result;
-    let buttonPressed = event.currentTarget;
-    let buttonContent = buttonPressed.innerText;
-
-    if (buttonContent == "C") { // 'C' button to clear calculator
+    if (button == "C" || button == "c") { // 'C' button to clear calculator
       this.resetCalculator();
     } else if (this.number2 != '') { // When the second number has already been populated
       if (this.operator == "/" && this.number2 == 0) { // Preven't dividing by 0
@@ -46,65 +45,75 @@ class Calculator {
         this.number1 = '';
         this.operator = '';
         this.number2 = '';
-      } else if (["+", "-", "*", "/", "="].includes(buttonContent)) { // If it is not a number, calculate
+      } else if (["+", "-", "*", "/", "=", "Enter"].includes(button) && !isNaN(this.number2)) { // If it is not a number and number2 is valid, calculate
         result = parseFloat(this.operate(+this.number1, this.operator, +this.number2).toFixed(4));
         this.number1 = result;
         this.operator = '';
         this.number2 = '';
       }
-      if (!isNaN(buttonContent) || (buttonContent == "." && !this.number2.includes("."))) { // If it is a number, append number to current number2
-        this.number2 = this.number2.toString() + buttonContent.toString();
+      if (!isNaN(button) || (button == "." && !this.number2.includes("."))) { // If it is a number, append number to current number2
+        this.number2 = this.number2.toString() + button.toString();
         console.log(this.number2);
         this.setDisplay(this.returnNumberCorrectLength(this.number2, 12, 6));
-      } else if (buttonContent == "=") { // If it is equal sign show result
-        console.log(buttonContent);
+      } else if (button == "=" || button == "Enter") { // If it is equal sign show result
+        console.log(button);
         console.log(result);
         this.setDisplay(this.returnNumberCorrectLength(result, 12, 6));
-      } else if (["+", "-", "*", "/"].includes(buttonContent) && !isNaN(this.number2)) { // If it is an operator button show result and set operator
-        this.operator = buttonContent;
+      } else if (["+", "-", "*", "/"].includes(button) && !isNaN(this.number2)) { // If it is an operator button show result and set operator
+        this.operator = button;
         console.log(result);
         console.log(this.operator);
         this.setDisplay(this.returnNumberCorrectLength(result, 12, 6));
-      } else if (buttonContent == "⬅") {
-        this.number2 = this.number2.slice(0, -1);
+      } else if (button == "⬅" || button == "Backspace") {
+        this.number2 = this.number2.toString().slice(0, -1);
         this.setDisplay(this.number2);
       }
     } else if (this.operator != '') { // When operator has already been populated
-      if (this.number2 == '' && buttonContent == "π") { // If number2 is empty and PI π is pressed
+      if (this.number2 == '' && button == "π") { // If number2 is empty and PI π is pressed
         this.number2 = Math.PI.toFixed(4);
         console.log(this.number2);
         this.setDisplay(this.number2);
       }
-      else if (!isNaN(buttonContent) || (buttonContent == "-" && !this.number2.includes("-")) || (buttonContent == "." && !this.number2.includes("."))) { // If it is a number, set as number2
-        this.number2 = buttonContent;
+      else if (!isNaN(button) || (button == "-" && !this.number2.includes("-")) || (button == "." && !this.number2.includes("."))) { // If it is a number, set as number2
+        this.number2 = button;
         console.log(this.number2);
         this.setDisplay(this.number2);
-      } else if (["+", "-", "*", "/"].includes(buttonContent)) { // If an operator already exists, it gets replaced
-        this.operator = buttonContent;
+      } else if (["+", "-", "*", "/"].includes(button)) { // If an operator already exists, it gets replaced
+        this.operator = button;
         console.log(this.operator);
       }
     } else if (this.number1 != '') { // When number1 has already been populated
-      if (!isNaN(buttonContent) || (buttonContent == "." && !this.number1.includes("."))) { // If number, append to number1
-        this.number1 = this.number1.toString() + buttonContent.toString();
-        //this.number1 = this.returnNumberCorrectLength(this.number1, 7, 6);
+      if (!isNaN(button) || (button == "." && !this.number1.includes("."))) { // If number, append to number1
+        this.number1 = this.number1.toString() + button.toString();
         console.log(this.number1);
         this.setDisplay(this.returnNumberCorrectLength(this.number1, 12, 6));
-      } else if (["+", "-", "*", "/"].includes(buttonContent) && !isNaN(this.number1)) { // If operator pressed, the operator gets set
-        this.operator = buttonContent;
+      } else if (["+", "-", "*", "/"].includes(button) && !isNaN(this.number1)) { // If operator pressed, the operator gets set
+        this.operator = button;
         console.log(this.operator);
-      } else if (buttonContent == "⬅") {
-        this.number1 = this.number1.slice(0, -1);
+      } else if (button == "⬅" || button == "Backspace") {
+        this.number1 = this.number1.toString().slice(0, -1);
         this.setDisplay(this.number1);
       }
-    } else if (this.number1 == '' && buttonContent == "π") { // If number1 is empty and PI π is pressed
+    } else if (this.number1 == '' && button == "π") { // If number1 is empty and PI π is pressed
       this.number1 = Math.PI.toFixed(4);
       console.log(this.number1);
       this.setDisplay(this.number1);
-    } else if (this.number1 == '' && (!isNaN(buttonContent) || (buttonContent == "-" && !this.number1.includes("-"))) || buttonContent == ".") { // When number1 has NOT being set, it gets set if it is a valid number
-      this.number1 = buttonContent;
+    } else if (this.number1 == '' && (!isNaN(button) || (button == "-" && !this.number1.includes("-"))) || button == ".") { // When number1 has NOT being set, it gets set if it is a valid number
+      this.number1 = button;
       console.log(`${this.number1}`);
       this.setDisplay(this.number1);
     }
+  }
+
+  buttonHandler(event) {
+    let buttonPressed = event.currentTarget;
+    let buttonContent = buttonPressed.innerText;
+
+    this.calculatorLogic(buttonContent);
+  }
+
+  keyboardHandler(event) {
+
   }
 
   returnNumberCorrectLength(number, maxCharsLength, decimalPlaces) {
@@ -186,6 +195,7 @@ class Calculator {
     let nine = document.createElement("button");
     nine.textContent = 9;
     let zero = document.createElement("button");
+    zero.className = "button-zero";
     zero.textContent = 0;
 
     grid4x4.appendChild(clear);
@@ -225,25 +235,34 @@ class Calculator {
     this.calculatorButtons = [clear, back, pi, division, multiplication, subtraction, addition, point, equal, one, two, three, four, five, six, seven, eight, nine, zero];
     this.calculatorButtons.forEach(button => button.addEventListener("click", this.buttonHandler.bind(this)));
     
-    //this.displaySquare = document.querySelector(".result-box", this);
     this.displaySquare = this.resultBox;
+
+    // By default, the newest calculator is the active one.
+    Calculator.activeCalculator = this;
+    
+    mainContainer.addEventListener("click", () => {
+      Calculator.activeCalculator = this;
+      console.log(`The active calc is:`);
+      console.log(Calculator.activeCalculator);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      event.preventDefault();
+      console.log(event.key);
+      if (["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "c", "C", "Backspace", "p", "P", "/", "*", "-", "+", "=", "Enter"]
+      .includes(event.key) && this === Calculator.activeCalculator) {
+        this.calculatorLogic(event.key);
+      }
+    });
   }
+
+
 }
 
 const myCalc1 = new Calculator();
 myCalc1.createElements();
 const myCalc2 = new Calculator();
 myCalc2.createElements();
-const myCalc3 = new Calculator();
-myCalc3.createElements();
-const myCalc4 = new Calculator();
-myCalc4.createElements();
-const myCalc5 = new Calculator();
-myCalc5.createElements();
-const myCalc6 = new Calculator();
-myCalc6.createElements();
-const myCalc7 = new Calculator();
-myCalc7.createElements();
 
 // Make the Calculator class create it's own HTML calculator.
 // Be sure to allow the user to add negative numbers for multiplication

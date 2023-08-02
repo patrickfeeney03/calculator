@@ -56,6 +56,11 @@ button:active {
   border-color: #191919;
 }
 
+.active-operator-button {
+  background-color: #191919;
+  border-color: #191919;
+}
+
 div>.clear {
   /* Clear Button */
   background-color: #ea9090;
