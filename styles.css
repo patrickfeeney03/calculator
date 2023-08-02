@@ -1,8 +1,12 @@
 .main-container {
-  /*background-color: #303030;*/
   background-color: #303030;
   padding: 1.8rem 1.8rem 2rem 1.8rem;
   width: max-content;
+  box-sizing: content-box;
+}
+
+.active-main-container {
+  box-shadow: 0rem 0rem 3rem 3rem #7fe5ff;
   box-sizing: border-box;
 }
 
@@ -15,8 +19,9 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
+  box-sizing: content-box;
 }
 
 .calculator-name {

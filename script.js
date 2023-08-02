@@ -242,8 +242,11 @@ class Calculator {
     
     mainContainer.addEventListener("click", () => {
       Calculator.activeCalculator = this;
-      console.log(`The active calc is:`);
-      console.log(Calculator.activeCalculator);
+      const allCalcs = document.querySelectorAll(".main-container");
+      allCalcs.forEach(calculator => {
+        calculator.classList.remove("active-main-container");
+      });
+      mainContainer.classList.add("active-main-container");
     });
 
     document.addEventListener("keydown", (event) => {
