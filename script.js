@@ -12,6 +12,7 @@ class Calculator {
     this.operator = '';
     this.number2 = '';
 
+    this.isKeyPressed = false;
   }
 
   operate(num1, op, num2) {
@@ -66,7 +67,7 @@ class Calculator {
         this.setDisplay(this.returnNumberCorrectLength(result, 12, 6));
       } else if (button == "⬅" || button == "Backspace") {
         this.number2 = this.number2.toString().slice(0, -1);
-        this.setDisplay(this.number2);
+        this.setDisplay(this.returnNumberCorrectLength(this.number2));
       }
     } else if (this.operator != '') { // When operator has already been populated
       if (this.number2 == '' && button == "π") { // If number2 is empty and PI π is pressed
@@ -92,7 +93,7 @@ class Calculator {
         console.log(this.operator);
       } else if (button == "⬅" || button == "Backspace") {
         this.number1 = this.number1.toString().slice(0, -1);
-        this.setDisplay(this.number1);
+        this.setDisplay(this.returnNumberCorrectLength(this.number1));
       }
     } else if (this.number1 == '' && button == "π") { // If number1 is empty and PI π is pressed
       this.number1 = Math.PI.toFixed(4);
@@ -257,12 +258,17 @@ class Calculator {
 
     document.addEventListener("keydown", (event) => {
       event.preventDefault();
-      console.log(event.key);
       if (["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "c", "C", "Backspace", "p", "P", "/", "*", "-", "+", "=", "Enter"]
-        .includes(event.key) && this === Calculator.activeCalculator) {
+      .includes(event.key) && this === Calculator.activeCalculator && !this.isKeyPressed) {
+        console.log(event.key);
         this.calculatorLogic(event.key);
+        this.isKeyPressed = true;
       }
     });
+    document.addEventListener("keyup", (event) => {
+      event.preventDefault();
+      this.isKeyPressed = false;
+    })
   }
 }
 
