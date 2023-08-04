@@ -117,7 +117,6 @@ class Calculator {
         this.number1 = result;
         this.operator = '';
         this.number2 = '';
-        console.log("ran");
       }
       if (!isNaN(button) || (button == "." && !this.number2.includes("."))) { // If it is a number, append number to current number2
         this.number2 = this.number2.toString() + button.toString();
@@ -154,9 +153,10 @@ class Calculator {
         console.log(this.operator);
       }
     } else if (this.number1 != '') { // When number1 has already been populated
-      if (!isNaN(button) || (button == "." && !this.number1.includes("."))) { // If number, append to number1
-        this.number1 = this.number1.toString() + button.toString();
+      if ((!isNaN(button) || (button == "." && !this.number1.includes("."))) && !(button == "0" && this.number1 == "0")) { // If number, append to number1
+        console.log(`num1: ${this.number1}`);
         console.log(this.number1);
+        this.number1 = this.number1.toString() + button.toString();
         this.setDisplay(this.returnNumberCorrectLength(this.number1, 12, 6));
       } else if (["+", "-", "*", "/"].includes(button) && !isNaN(this.number1)) { // If operator pressed, the operator gets set
         this.operator = button;
@@ -341,14 +341,11 @@ class Calculator {
       if (Calculator.operators.includes(event.key) && !Calculator.activeKeys[event.key]) { // Only run logic if operator, logic itself will set style
         this.calculatorLogic(event.key);
         Calculator.activeKeys[event.key] = true;
-        console.log("keydown1");
       }
       else if (this === Calculator.activeCalculator && !Calculator.activeKeys[event.key]) { // Set style if key is not an operator
-        console.log("keydown2");
         this.calculatorLogic(event.key);        
         Calculator.activeKeys[event.key] = true;
         const buttonElement = this[Calculator.mappedKeys[event.key]];
-        console.log(buttonElement);
         buttonElement.classList.add(buttonElement.activeClassName);
       }
     });
