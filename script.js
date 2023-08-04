@@ -110,12 +110,13 @@ class Calculator {
         this.number1 = result;
         this.operator = '';
         this.number2 = '';
+        console.log("ran");
       }
       if (!isNaN(button) || (button == "." && !this.number2.includes("."))) { // If it is a number, append number to current number2
         this.number2 = this.number2.toString() + button.toString();
         console.log(this.number2);
         this.setDisplay(this.returnNumberCorrectLength(this.number2, 12, 6));
-      } else if (button == "=" || button == "Enter") { // If it is equal sign show result
+      } else if ((button == "=" || button == "Enter") && !isNaN(this.number2)) { // If it is equal sign show result
         console.log(button);
         console.log(result);
         this.setDisplay(this.returnNumberCorrectLength(result, 12, 6));
