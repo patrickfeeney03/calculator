@@ -40,6 +40,10 @@ body {
   color: #232323;
 }
 
+.button-active {
+  background-color: coral;
+}
+
 #calculators-container {
   width: 80%;
   display: flex;
@@ -100,7 +104,13 @@ button {
 
 button:active {
   transform: translateY(0.1rem);
-  background-color: #191919;
+  background-color: #b1571c;
+  border-color: #191919;
+}
+
+.button-active {
+  transform: translateY(0.1rem);
+  background-color: #b1571c;
   border-color: #191919;
 }
 
@@ -109,7 +119,7 @@ button:active {
   border-color: #191919;
 }
 
-div>.clear {
+.clear {
   /* Clear Button */
   background-color: #ea9090;
   color: #232323;
@@ -122,7 +132,13 @@ div>.clear:active {
   border-color: #e26565;
 }
 
-button.calculate {
+.clear-active {
+  transform: translateY(0.1rem);
+  background-color: #e26565;
+  border-color: #e26565;
+}
+
+.calculate {
   /* Equal button */
   background-color: #90cfb0;
   color: #232323;
@@ -131,6 +147,12 @@ button.calculate {
 }
 
 button.calculate:active {
+  background-color: #4bae7d;
+  border-color: #4bae7d;
+}
+
+.calculate-active {
+  transform: translateY(0.1rem);
   background-color: #4bae7d;
   border-color: #4bae7d;
 }
