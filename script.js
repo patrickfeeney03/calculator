@@ -1,5 +1,59 @@
 class Calculator {
   static activeCalculator = null;
+  static activeKeys = {
+    "1": false,
+    "2": false,
+    "3": false,
+    "4": false,
+    "5": false,
+    "6": false,
+    "7": false,
+    "8": false,
+    "9": false,
+    "0": false,
+    ".": false,
+    "c": false,
+    "C": false,
+    "Backspace": false,
+    "p": false,
+    "P": false,
+    "Enter": false,
+    "=": false,
+  }
+  static mappedKeys = {
+    "1": "one",
+    "2": "two",
+    "3": "three",
+    "4": "four",
+    "5": "five",
+    "6": "six",
+    "7": "seven",
+    "8": "eight",
+    "9": "nine",
+    "0": "zero",
+    ".": "point",
+    "c": "clear",
+    "C": "clear",
+    "Backspace": "back",
+    "p": "pi",
+    "P": "pi",
+    "Enter": "equal",
+    "=": "equal",
+    "/": "division",
+    "*": "multiplication",
+    "-": "subtraction",
+    "+": "addition",
+  }
+
+  static classesForButtons = {
+    "class1Normal": "",
+    "class1Active": "button-active",
+    "class2Normal": "clear",
+    "class2Active": "clear-active",
+    "class3Normal": "calculate",
+    "class3Active": "calculate-active",
+  }
+
   constructor() {
     this.operations = {
       "-": (a, b) => a - b,
@@ -11,8 +65,13 @@ class Calculator {
     this.number1 = '';
     this.operator = '';
     this.number2 = '';
+  }
 
-    this.isKeyPressed = false;
+  resetCalculator() {
+    this.displaySquare.innerText = "";
+    this.number1 = '';
+    this.operator = '';
+    this.number2 = '';
   }
 
   operate(num1, op, num2) {
@@ -106,13 +165,6 @@ class Calculator {
     }
   }
 
-  buttonHandler(event) {
-    let buttonPressed = event.currentTarget;
-    let buttonContent = buttonPressed.innerText;
-
-    this.calculatorLogic(buttonContent);
-  }
-
   returnNumberCorrectLength(number, maxCharsLength, decimalPlaces) {
     if (number.toString().length >= maxCharsLength && number.length < 12) {
       number = Number(number).toExponential(decimalPlaces);
@@ -121,13 +173,6 @@ class Calculator {
       number = Number(number).toExponential(decimalPlaces - 1);
     }
     return number;
-  }
-
-  resetCalculator() {
-    this.displaySquare.innerText = "";
-    this.number1 = '';
-    this.operator = '';
-    this.number2 = '';
   }
 
   createElements() {
@@ -144,83 +189,102 @@ class Calculator {
     let grid4x4 = document.createElement("div");
     grid4x4.className = "grid-4x4";
 
-    let clear = document.createElement("button");
-    clear.className = "clear";
-    clear.textContent = "C";
+    this.clear = document.createElement("button");
+    this.clear.className = Calculator.classesForButtons["class2Normal"];
+    this.clear.textContent = "C";
+    this.clear.activeClassName = Calculator.classesForButtons["class2Active"];
 
-    let back = document.createElement("button");
-    back.textContent = "⬅";
+    this.back = document.createElement("button");
+    this.back.textContent = "⬅";
+    this.back.activeClassName = Calculator.classesForButtons["class1Active"];
 
-    let pi = document.createElement("button");
-    pi.textContent = "π";
+    this.pi = document.createElement("button");
+    this.pi.textContent = "π";
+    this.pi.activeClassName = Calculator.classesForButtons["class1Active"];
 
-    let division = document.createElement("button");
-    division.textContent = "/";
+    this.division = document.createElement("button");
+    this.division.textContent = "/";
+    this.division.activeClassName = Calculator.classesForButtons["class1Active"];
 
-    let multiplication = document.createElement("button");
-    multiplication.textContent = "*";
+    this.multiplication = document.createElement("button");
+    this.multiplication.textContent = "*";
+    this.multiplication.activeClassName = Calculator.classesForButtons["class1Active"];
 
-    let subtraction = document.createElement("button");
-    subtraction.textContent = "-";
+    this.subtraction = document.createElement("button");
+    this.subtraction.textContent = "-";
+    this.subtraction.activeClassName = Calculator.classesForButtons["class1Active"];
 
-    let addition = document.createElement("button");
-    addition.textContent = "+";
+    this.addition = document.createElement("button");
+    this.addition.textContent = "+";
+    this.addition.activeClassName = Calculator.classesForButtons["class1Active"];
 
-    let point = document.createElement("button");
-    point.textContent = ".";
+    this.point = document.createElement("button");
+    this.point.textContent = ".";
+    this.point.activeClassName = Calculator.classesForButtons["class1Active"];
 
-    let equal = document.createElement("button");
-    equal.className = "calculate operator-buttons";
-    equal.textContent = "=";
+    this.equal = document.createElement("button");
+    this.equal.className = `${Calculator.classesForButtons["class3Normal"]} operator-buttons`;
+    this.equal.textContent = "=";
+    this.equal.activeClassName = Calculator.classesForButtons["class3Active"];
 
-    let one = document.createElement("button");
-    one.textContent = 1;
-    let two = document.createElement("button");
-    two.textContent = 2;
-    let three = document.createElement("button");
-    three.textContent = 3;
-    let four = document.createElement("button");
-    four.textContent = 4;
-    let five = document.createElement("button");
-    five.textContent = 5;
-    let six = document.createElement("button");
-    six.textContent = 6;
-    let seven = document.createElement("button");
-    seven.textContent = 7;
-    let eight = document.createElement("button");
-    eight.textContent = 8;
-    let nine = document.createElement("button");
-    nine.textContent = 9;
-    let zero = document.createElement("button");
-    zero.className = "button-zero";
-    zero.textContent = 0;
+    this.one = document.createElement("button");
+    this.one.textContent = 1;
+    this.one.activeClassName = Calculator.classesForButtons["class1Active"];
+    this.two = document.createElement("button");
+    this.two.textContent = 2;
+    this.two.activeClassName = Calculator.classesForButtons["class1Active"];
+    this.three = document.createElement("button");
+    this.three.textContent = 3;
+    this.three.activeClassName = Calculator.classesForButtons["class1Active"];
+    this.four = document.createElement("button");
+    this.four.textContent = 4;
+    this.four.activeClassName = Calculator.classesForButtons["class1Active"];
+    this.five = document.createElement("button");
+    this.five.textContent = 5;
+    this.five.activeClassName = Calculator.classesForButtons["class1Active"];
+    this.six = document.createElement("button");
+    this.six.textContent = 6;
+    this.six.activeClassName = Calculator.classesForButtons["class1Active"];
+    this.seven = document.createElement("button");
+    this.seven.textContent = 7;
+    this.seven.activeClassName = Calculator.classesForButtons["class1Active"];
+    this.eight = document.createElement("button");
+    this.eight.textContent = 8;
+    this.eight.activeClassName = Calculator.classesForButtons["class1Active"];
+    this.nine = document.createElement("button");
+    this.nine.textContent = 9;
+    this.nine.activeClassName = Calculator.classesForButtons["class1Active"];
+    this.zero = document.createElement("button");
+    this.zero.className = "button-zero";
+    this.zero.textContent = 0;
+    this.zero.activeClassName = Calculator.classesForButtons["class1Active"];
 
-    grid4x4.appendChild(clear);
-    grid4x4.appendChild(back);
-    grid4x4.appendChild(pi);
-    grid4x4.appendChild(division);
+    grid4x4.appendChild(this.clear);
+    grid4x4.appendChild(this.back);
+    grid4x4.appendChild(this.pi);
+    grid4x4.appendChild(this.division);
 
-    grid4x4.appendChild(seven);
-    grid4x4.appendChild(eight);
-    grid4x4.appendChild(nine);
-    grid4x4.appendChild(multiplication);
+    grid4x4.appendChild(this.seven);
+    grid4x4.appendChild(this.eight);
+    grid4x4.appendChild(this.nine);
+    grid4x4.appendChild(this.multiplication);
 
-    grid4x4.appendChild(four);
-    grid4x4.appendChild(five);
-    grid4x4.appendChild(six);
-    grid4x4.appendChild(subtraction);
+    grid4x4.appendChild(this.four);
+    grid4x4.appendChild(this.five);
+    grid4x4.appendChild(this.six);
+    grid4x4.appendChild(this.subtraction);
 
-    grid4x4.appendChild(one);
-    grid4x4.appendChild(two);
-    grid4x4.appendChild(three);
-    grid4x4.appendChild(addition);
+    grid4x4.appendChild(this.one);
+    grid4x4.appendChild(this.two);
+    grid4x4.appendChild(this.three);
+    grid4x4.appendChild(this.addition);
 
     let gridBottom = document.createElement("div");
     gridBottom.className = "grid-bottom";
 
-    gridBottom.appendChild(zero);
-    gridBottom.appendChild(point);
-    gridBottom.appendChild(equal);
+    gridBottom.appendChild(this.zero);
+    gridBottom.appendChild(this.point);
+    gridBottom.appendChild(this.equal);
 
     mainContainer.appendChild(calculatorName);
     mainContainer.appendChild(this.resultBox);
@@ -234,7 +298,7 @@ class Calculator {
     const calculatorsContainer = document.querySelector("#calculators-container");
     calculatorsContainer.appendChild(this.mainContainerContainer);
 
-    this.calculatorButtons = [clear, back, pi, division, multiplication, subtraction, addition, point, equal, one, two, three, four, five, six, seven, eight, nine, zero];
+    this.calculatorButtons = [this.clear, this.back, this.pi, this.division, this.multiplication, this.subtraction, this.addition, this.point, this.equal, this.one, this.two, this.three, this.four, this.five, this.six, this.seven, this.eight, this.nine, this.zero];
     this.calculatorButtons.forEach(button => button.addEventListener("click", this.buttonHandler.bind(this)));
 
     this.displaySquare = this.resultBox;
@@ -258,18 +322,32 @@ class Calculator {
 
     document.addEventListener("keydown", (event) => {
       event.preventDefault();
-      if (["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "c", "C", "Backspace", "p", "P", "/", "*", "-", "+", "=", "Enter"]
-      .includes(event.key) && this === Calculator.activeCalculator && !this.isKeyPressed) {
-        console.log(event.key);
-        this.calculatorLogic(event.key);
-        this.isKeyPressed = true;
+      if (event.key in Calculator.mappedKeys && this === Calculator.activeCalculator && !Calculator.activeKeys[event.key]) {
+        this.calculatorLogic(event.key);        
+        Calculator.activeKeys[event.key] = true;
+        const buttonElement = this[Calculator.mappedKeys[event.key]];
+        console.log(buttonElement);
+        buttonElement.classList.add(buttonElement.activeClassName);
       }
     });
     document.addEventListener("keyup", (event) => {
       event.preventDefault();
-      this.isKeyPressed = false;
-    })
+      if (event.key in Calculator.mappedKeys) {
+        const buttonElement = this[Calculator.mappedKeys[event.key]];
+        buttonElement.classList.remove(buttonElement.activeClassName);
+        Calculator.activeKeys[event.key] = false;
+      }
+    });
   }
+
+  buttonHandler(event) {
+    let buttonPressed = event.currentTarget;
+    let buttonContent = buttonPressed.innerText;
+
+    this.calculatorLogic(buttonContent);
+  }
+
+
 }
 
 const addCalcBtn = document.querySelector("#button-addCalc");
@@ -305,7 +383,6 @@ function removeCalculator(key) {
   console.log(calculators[key]);
   let calculatorsContainer = document.querySelector("#calculators-container");
   calculatorsContainer.removeChild(calculators[key].mainContainerContainer);
-  //delete calculators[key];
   delete calculators[key];
 }
 
