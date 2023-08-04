@@ -19,6 +19,10 @@ class Calculator {
     "P": false,
     "Enter": false,
     "=": false,
+    "/": false,
+    "*": false,
+    "-": false,
+    "+": false,
   }
   static mappedKeys = {
     "1": "one",
@@ -54,6 +58,8 @@ class Calculator {
     "class3Active": "calculate-active",
   }
 
+  static operators = ["+", "-", "*", "/"];
+
   constructor() {
     this.operations = {
       "-": (a, b) => a - b,
@@ -68,6 +74,7 @@ class Calculator {
   }
 
   resetCalculator() {
+    if (this.operator != '') {this[Calculator.mappedKeys[this.operator]].classList.remove(Calculator.classesForButtons["class1Active"])}
     this.displaySquare.innerText = "";
     this.number1 = '';
     this.operator = '';
@@ -130,6 +137,9 @@ class Calculator {
         this.setDisplay(this.returnNumberCorrectLength(this.number2));
       }
     } else if (this.operator != '') { // When operator has already been populated
+      if (!Calculator.operators.includes(button) || (this.operator == "-" && button == "-") || (Calculator.operators.includes(button) && button == "-")) {
+        this[Calculator.mappedKeys[this.operator]].classList.remove(Calculator.classesForButtons["class1Active"]);
+      }
       if (this.number2 == '' && button == "π") { // If number2 is empty and PI π is pressed
         this.number2 = Math.PI.toFixed(4);
         console.log(this.number2);
@@ -151,6 +161,7 @@ class Calculator {
       } else if (["+", "-", "*", "/"].includes(button) && !isNaN(this.number1)) { // If operator pressed, the operator gets set
         this.operator = button;
         console.log(this.operator);
+        this[Calculator.mappedKeys[this.operator]].classList.add(Calculator.classesForButtons["class1Active"]);
       } else if (button == "⬅" || button == "Backspace") {
         this.number1 = this.number1.toString().slice(0, -1);
         this.setDisplay(this.returnNumberCorrectLength(this.number1));
@@ -172,6 +183,9 @@ class Calculator {
     }
     if (number.toString().length >= 12) {
       number = Number(number).toExponential(decimalPlaces - 1);
+    }
+    if (number < 0 && number.toString().length >= 12) {
+      number = Number(number).toExponential(decimalPlaces - 2);
     }
     return number;
   }
@@ -323,7 +337,14 @@ class Calculator {
 
     document.addEventListener("keydown", (event) => {
       event.preventDefault();
-      if (event.key in Calculator.mappedKeys && this === Calculator.activeCalculator && !Calculator.activeKeys[event.key]) {
+      if (!(event.key in Calculator.mappedKeys)) { return } // Return if not a valid key
+      if (Calculator.operators.includes(event.key) && !Calculator.activeKeys[event.key]) { // Only run logic if operator, logic itself will set style
+        this.calculatorLogic(event.key);
+        Calculator.activeKeys[event.key] = true;
+        console.log("keydown1");
+      }
+      else if (this === Calculator.activeCalculator && !Calculator.activeKeys[event.key]) { // Set style if key is not an operator
+        console.log("keydown2");
         this.calculatorLogic(event.key);        
         Calculator.activeKeys[event.key] = true;
         const buttonElement = this[Calculator.mappedKeys[event.key]];
@@ -333,10 +354,18 @@ class Calculator {
     });
     document.addEventListener("keyup", (event) => {
       event.preventDefault();
-      if (event.key in Calculator.mappedKeys) {
+      if (!(event.key in Calculator.mappedKeys)) { return } // Return if not a valid key
+      if (Calculator.operators.includes(event.key)) {
+        Calculator.activeKeys[event.key] = false;
+      }
+      else {
         const buttonElement = this[Calculator.mappedKeys[event.key]];
         buttonElement.classList.remove(buttonElement.activeClassName);
         Calculator.activeKeys[event.key] = false;
+      }
+      if (event.key === "Shift") {
+        this.multiplication.classList.remove(this.multiplication.activeClassName);
+        this.addition.classList.remove(this.addition.activeClassName);
       }
     });
   }
