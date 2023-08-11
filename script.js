@@ -69,8 +69,11 @@ class Calculator {
     }
 
     this.number1 = '';
+    this.lastNumber1 = '';
     this.operator = '';
+    this.lastOperator = '';
     this.number2 = '';
+    this.lastNumber2 = '';
   }
 
   resetCalculator() {
@@ -79,6 +82,7 @@ class Calculator {
     this.number1 = '';
     this.operator = '';
     this.number2 = '';
+    this.lastButton = '';
   }
 
   operate(num1, op, num2) {
@@ -104,9 +108,17 @@ class Calculator {
 
   calculatorLogic(button) {
     let result;
+    console.log(`lastButton:"${this.lastButton}" lastNumber1:"${this.lastNumber1}" lastOperator:"${this.lastOperator}" lastNumber2:"${this.lastNumber2}"`);
+     
     if (button == "C" || button == "c") { // 'C' button to clear calculator
       this.resetCalculator();
+    } else if (button == "=" && this.lastButton == "=" && (this.lastNumber1 != '' && this.lastOperator != '' && this.lastNumber2 != '')) {
+      this.number1 = parseFloat(this.operate(+this.lastNumber1, this.lastOperator, +this.lastNumber2).toFixed(4));
+      this.setDisplay(this.number1);
+      this.lastNumber1 = this.number1;
+      console.log("here");
     } else if (this.number2 != '') { // When the second number has already been populated
+      //console.log(`Button: ${button} lastButton ${this.lastButton}`);
       if (this.operator == "/" && this.number2 == 0) { // Preven't dividing by 0
         result = "Can't divide by 0";
         this.number1 = '';
@@ -115,6 +127,9 @@ class Calculator {
       } else if (["+", "-", "*", "/", "=", "Enter"].includes(button) && !isNaN(this.number2)) { // If it is not a number and number2 is valid, calculate
         result = parseFloat(this.operate(+this.number1, this.operator, +this.number2).toFixed(4));
         this.number1 = result;
+        this.lastNumber1 = this.number1;
+        this.lastOperator = this.operator;
+        this.lastNumber2 = this.number2;
         this.operator = '';
         this.number2 = '';
       }
@@ -153,7 +168,7 @@ class Calculator {
         console.log(this.operator);
       }
     } else if (this.number1 != '') { // When number1 has already been populated
-      if ((!isNaN(button) || (button == "." && !this.number1.includes("."))) && !(button == "0" && this.number1 == "0")) { // If number, append to number1
+      if ((!isNaN(button) || (button == "." && !this.number1.toString().includes("."))) && !(button == "0" && this.number1 == "0")) { // If number, append to number1
         console.log(`num1: ${this.number1}`);
         console.log(this.number1);
         this.number1 = this.number1.toString() + button.toString();
@@ -175,6 +190,7 @@ class Calculator {
       console.log(`${this.number1}`);
       this.setDisplay(this.number1);
     }
+    this.lastButton = button;
   }
 
   returnNumberCorrectLength(number, maxCharsLength, decimalPlaces) {
@@ -336,7 +352,7 @@ class Calculator {
     });
 
     document.addEventListener("keydown", (event) => {
-      event.preventDefault();
+      event.preventDefault(); // Prevent the Enter key from pressing buttons
       if (!(event.key in Calculator.mappedKeys)) { return } // Return if not a valid key
       if (Calculator.operators.includes(event.key) && !Calculator.activeKeys[event.key]) { // Only run logic if operator, logic itself will set style
         this.calculatorLogic(event.key);
@@ -350,7 +366,7 @@ class Calculator {
       }
     });
     document.addEventListener("keyup", (event) => {
-      event.preventDefault();
+      //event.preventDefault(); Haven't tested if removing this has a negative effect
       if (!(event.key in Calculator.mappedKeys)) { return } // Return if not a valid key
       if (Calculator.operators.includes(event.key)) {
         Calculator.activeKeys[event.key] = false;
