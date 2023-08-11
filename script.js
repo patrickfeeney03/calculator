@@ -108,22 +108,22 @@ class Calculator {
 
   calculatorLogic(button) {
     let result;
-    console.log(`lastButton:"${this.lastButton}" lastNumber1:"${this.lastNumber1}" lastOperator:"${this.lastOperator}" lastNumber2:"${this.lastNumber2}"`);
-     
+    //console.log(`lastButton:"${this.lastButton}" lastNumber1:"${this.lastNumber1}" lastOperator:"${this.lastOperator}" lastNumber2:"${this.lastNumber2}"`);     
     if (button == "C" || button == "c") { // 'C' button to clear calculator
       this.resetCalculator();
-    } else if (button == "=" && this.lastButton == "=" && (this.lastNumber1 != '' && this.lastOperator != '' && this.lastNumber2 != '')) {
+    } else if ((button == "=" || button == "Enter") && (this.lastButton == "=" || this.lastButton == "Enter") && (this.lastNumber1 != '' && this.lastOperator != '' && this.lastNumber2 != '')) {
       this.number1 = parseFloat(this.operate(+this.lastNumber1, this.lastOperator, +this.lastNumber2).toFixed(4));
-      this.setDisplay(this.number1);
+      this.setDisplay(this.returnNumberCorrectLength(this.number1, 12, 6));
       this.lastNumber1 = this.number1;
       console.log("here");
     } else if (this.number2 != '') { // When the second number has already been populated
-      //console.log(`Button: ${button} lastButton ${this.lastButton}`);
       if (this.operator == "/" && this.number2 == 0) { // Preven't dividing by 0
-        result = "Can't divide by 0";
+        result = "Illegal";
+        this.setDisplay(result);
         this.number1 = '';
         this.operator = '';
         this.number2 = '';
+        return
       } else if (["+", "-", "*", "/", "=", "Enter"].includes(button) && !isNaN(this.number2)) { // If it is not a number and number2 is valid, calculate
         result = parseFloat(this.operate(+this.number1, this.operator, +this.number2).toFixed(4));
         this.number1 = result;
