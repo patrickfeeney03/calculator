@@ -44,10 +44,6 @@ body {
   color: #232323;
 }
 
-.button-active {
-  background-color: coral;
-}
-
 #calculators-container {
   width: 90%;
   display: flex;

@@ -151,20 +151,25 @@ class Calculator {
         this.setDisplay(this.returnNumberCorrectLength(this.number2));
       }
     } else if (this.operator != '') { // When operator has already been populated
-      if (!Calculator.operators.includes(button) || (this.operator == "-" && button == "-") || (Calculator.operators.includes(button) && button == "-")) {
-        this[Calculator.mappedKeys[this.operator]].classList.remove(Calculator.classesForButtons["class1Active"]);
-      }
       if (this.number2 == '' && button == "π") { // If number2 is empty and PI π is pressed
         this.number2 = Math.PI.toFixed(4);
         console.log(this.number2);
         this.setDisplay(this.number2);
+        this[Calculator.mappedKeys[this.operator]].classList.remove(Calculator.classesForButtons["class1Active"]);
+        Calculator.activeKeys[Calculator.mappedKeys[this.operator]] = false;
       }
       else if (!isNaN(button) || (button == "-" && !this.number2.includes("-")) || (button == "." && !this.number2.includes("."))) { // If it is a number, set as number2
         this.number2 = button;
         console.log(this.number2);
         this.setDisplay(this.number2);
+        this[Calculator.mappedKeys[this.operator]].classList.remove(Calculator.classesForButtons["class1Active"]);
+        Calculator.activeKeys[Calculator.mappedKeys[this.operator]] = false;
       } else if (["+", "-", "*", "/"].includes(button)) { // If an operator already exists, it gets replaced
+        this[Calculator.mappedKeys[this.operator]].classList.remove(Calculator.classesForButtons["class1Active"]);
+        Calculator.activeKeys[Calculator.mappedKeys[this.operator]] = false;
         this.operator = button;
+        this[Calculator.mappedKeys[this.operator]].classList.add(Calculator.classesForButtons["class1Active"]);
+        Calculator.activeKeys[Calculator.mappedKeys[this.operator]] = true;
         console.log(this.operator);
       }
     } else if (this.number1 != '') { // When number1 has already been populated
