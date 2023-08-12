@@ -1,29 +1,6 @@
 class Calculator {
   static activeCalculator = null;
-  static activeKeys = {
-    "1": false,
-    "2": false,
-    "3": false,
-    "4": false,
-    "5": false,
-    "6": false,
-    "7": false,
-    "8": false,
-    "9": false,
-    "0": false,
-    ".": false,
-    "c": false,
-    "C": false,
-    "Backspace": false,
-    "p": false,
-    "P": false,
-    "Enter": false,
-    "=": false,
-    "/": false,
-    "*": false,
-    "-": false,
-    "+": false,
-  }
+  
   static mappedElements = {
     "1": "one",
     "2": "two",
@@ -74,6 +51,31 @@ class Calculator {
     this.lastOperator = '';
     this.number2 = '';
     this.lastNumber2 = '';
+
+    this.activeKeys = {
+      "1": false,
+      "2": false,
+      "3": false,
+      "4": false,
+      "5": false,
+      "6": false,
+      "7": false,
+      "8": false,
+      "9": false,
+      "0": false,
+      ".": false,
+      "c": false,
+      "C": false,
+      "Backspace": false,
+      "p": false,
+      "P": false,
+      "Enter": false,
+      "=": false,
+      "/": false,
+      "*": false,
+      "-": false,
+      "+": false,
+    }
   }
 
   resetCalculator() {
@@ -157,20 +159,20 @@ class Calculator {
         console.log(this.number2);
         this.setDisplay(this.number2);
         this[Calculator.mappedElements[this.operator]].classList.remove(Calculator.classesForButtons["class1Active"]);
-        Calculator.activeKeys[Calculator.mappedElements[this.operator]] = false;
+        this.activeKeys[Calculator.mappedElements[this.operator]] = false;
       }
       else if (!isNaN(button) || (button == "-" && !this.number2.includes("-")) || (button == "." && !this.number2.includes("."))) { // If it is a number, set as number2
         this.number2 = button;
         console.log(this.number2);
         this.setDisplay(this.number2);
         this[Calculator.mappedElements[this.operator]].classList.remove(Calculator.classesForButtons["class1Active"]);
-        Calculator.activeKeys[Calculator.mappedElements[this.operator]] = false;
+        this.activeKeys[Calculator.mappedElements[this.operator]] = false;
       } else if (["+", "-", "*", "/"].includes(button)) { // If an operator already exists, it gets replaced
         this[Calculator.mappedElements[this.operator]].classList.remove(Calculator.classesForButtons["class1Active"]);
-        Calculator.activeKeys[Calculator.mappedElements[this.operator]] = false;
+        this.activeKeys[Calculator.mappedElements[this.operator]] = false;
         this.operator = button;
         this[Calculator.mappedElements[this.operator]].classList.add(Calculator.classesForButtons["class1Active"]);
-        Calculator.activeKeys[Calculator.mappedElements[this.operator]] = true;
+        this.activeKeys[Calculator.mappedElements[this.operator]] = true;
         console.log(this.operator);
       }
     } else if (this.number1 != '') { // When number1 has already been populated
@@ -183,6 +185,8 @@ class Calculator {
         this.operator = button;
         console.log(this.operator);
         this[Calculator.mappedElements[this.operator]].classList.add(Calculator.classesForButtons["class1Active"]);
+        console.log(this);
+        console.log(this[Calculator.mappedElements[this.operator]]);
       } else if (button == "⬅" || button == "Backspace") {
         this.number1 = this.number1.toString().slice(0, -1);
         this.setDisplay(this.returnNumberCorrectLength(this.number1));
@@ -360,13 +364,13 @@ class Calculator {
     document.addEventListener("keydown", (event) => {
       event.preventDefault(); // Prevent the Enter key from pressing buttons
       if (!(event.key in Calculator.mappedElements)) { return } // Return if not a valid key
-      if (Calculator.operators.includes(event.key) && !Calculator.activeKeys[event.key]) { // Only run logic if operator, logic itself will set style
+      if (Calculator.operators.includes(event.key) && !this.activeKeys[event.key] && this === Calculator.activeCalculator) { // Only run logic if operator, logic itself will set style
         this.calculatorLogic(event.key);
-        Calculator.activeKeys[event.key] = true;
+        this.activeKeys[event.key] = true;
       }
-      else if (this === Calculator.activeCalculator && !Calculator.activeKeys[event.key]) { // Set style if key is not an operator
+      else if (this === Calculator.activeCalculator && !this.activeKeys[event.key]) { // Set style if key is not an operator
         this.calculatorLogic(event.key);
-        Calculator.activeKeys[event.key] = true;
+        this.activeKeys[event.key] = true;
         const buttonElement = this[Calculator.mappedElements[event.key]];
         buttonElement.classList.add(buttonElement.activeClassName);
       }
@@ -374,15 +378,15 @@ class Calculator {
     document.addEventListener("keyup", (event) => {
       //event.preventDefault(); Haven't tested if removing this has a negative effect
       if (!(event.key in Calculator.mappedElements)) { return } // Return if not a valid key
-      if (Calculator.operators.includes(event.key)) {
-        Calculator.activeKeys[event.key] = false;
+      if (Calculator.operators.includes(event.key) && this === Calculator.activeCalculator) {
+        this.activeKeys[event.key] = false;
       }
-      else {
+      else if (this.activeKeys[event.key] && this === Calculator.activeCalculator){
         const buttonElement = this[Calculator.mappedElements[event.key]];
         buttonElement.classList.remove(buttonElement.activeClassName);
-        Calculator.activeKeys[event.key] = false;
+        this.activeKeys[event.key] = false;
       }
-      if (event.key === "Shift") {
+      if (event.key === "Shift" && this === Calculator.activeCalculator) {
         this.multiplication.classList.remove(this.multiplication.activeClassName);
         this.addition.classList.remove(this.addition.activeClassName);
       }
